@@ -1,0 +1,21 @@
+{
+    "name":        "gears/gears",
+    "description": "The Gears Framework",
+    "licence":     "MIT",
+    "authors":     [
+        {
+            "name":  "Gregory Benner",
+            "email": "Gregbenner1@gmail.com",
+            "role":  "Developer"
+        }
+    ],
+    "require":     {
+        "php": ">=5.4.0"
+    },
+    "type":        "library",
+    "autoload":    {
+        "psr-0": {
+            "": ""
+        }
+    }
+}
