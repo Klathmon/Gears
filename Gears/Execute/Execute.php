@@ -6,11 +6,9 @@ namespace Gears\Execute;
  *
  * A safe, object-oriented way of executing binary files.
  *
- * @package   Gears\Execute
  * @author    Gregory Benner <Gregbenner1@gmail.com>
  * @copyright 2013
  * @licence   MIT
- * @version   1.0.0
  */
 class Execute
 {
