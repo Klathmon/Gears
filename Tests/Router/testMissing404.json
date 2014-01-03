@@ -1,12 +1,5 @@
 {
-    "baseUrl": "/testbaseurl/",
-    "errors": {
-              "404": {
-                  "controller": "ErrorController",
-                  "action":     "fourOhFour",
-                  "parameters": []
-              }
-    },
+    "baseUrl": "/",
     "routes":  {
         "test1": {
             "route":      "/testroute1",

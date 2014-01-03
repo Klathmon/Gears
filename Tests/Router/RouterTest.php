@@ -29,6 +29,16 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Gears\Exceptions\InvalidFileFormatException
      */
+    public static function testExceptionOnMissing404Route()
+    {
+        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . 'testMissing404.json');
+
+        self::assertNotInstanceOf('\\Gears\\Router\\Router', $router);
+    }
+
+    /**
+     * @expectedException \Gears\Exceptions\InvalidFileFormatException
+     */
     public static function testExceptionOnIncorrectJsonFormat()
     {
         $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . 'testBadRoutes.json');
@@ -39,9 +49,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerTestParseRoute
      */
-    public function testParseRoute($route, $expectedName, $expectedController, $expectedAction, $expectedParameters)
+    public function testParseRoute($routeFile, $route, $expectedName, $expectedController, $expectedAction, $expectedParameters)
     {
-        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . 'testRoutes.json');
+        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . $routeFile);
 
         $this->assertInstanceOf('\\Gears\\Router\\Router', $router);
 
@@ -56,10 +66,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public static function providerTestParseRoute()
     {
         return [
-            ['/testroute1', 'test1', 'Test1', 'show', ['param1value' => 'param1value', 'param2value' => 'param2value']],
-            ['/testroute2/123/456', 'test2', 'Test2', 'show', ['value1' => '123', 'value2' => '456']],
-            ['/testroute3/MyController/myAction/myParameter', 'test3', 'MyController', 'myAction', ['param1' => 'myParameter']],
-            ['/not/a/real/route', '404', 'ErrorController', 'fourOhFour', []],
+            ['testRoutes.json', '/testbaseurl/testroute1', 'test1', 'Test1', 'show', ['param1value' => 'param1value', 'param2value' => 'param2value']],
+            ['testRoutes.json', '/testbaseurl/testroute2/123/456', 'test2', 'Test2', 'show', ['value1' => '123', 'value2' => '456']],
+            ['testRoutes.json', '/testbaseurl/testroute3/MyController/myAction/myParameter', 'test3', 'MyController', 'myAction', ['param1' => 'myParameter']],
+            ['testRoutes.json', '/not/a/real/route', '404', 'ErrorController', 'fourOhFour', []],
+            ['testRoutes2.json', '/testroute1', 'test1', 'Test1', 'show', ['param1value' => 'param1value', 'param2value' => 'param2value']],
+            ['testRoutes2.json', '/testroute2/123/456', 'test2', 'Test2', 'show', ['value1' => '123', 'value2' => '456']],
+            ['testRoutes2.json', '/testroute3/MyController/myAction/myParameter', 'test3', 'MyController', 'myAction', ['param1' => 'myParameter']],
+            ['testRoutes2.json', '/not/a/real/route', '404', 'ErrorController', 'fourOhFour', []],
         ];
     }
 }

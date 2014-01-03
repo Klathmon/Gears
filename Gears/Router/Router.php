@@ -9,14 +9,14 @@ use InvalidArgumentException;
  * TODO: Full DocBlock annotations
  * TODO: Reverse route matching
  * TODO: Calling errors manually
- * TODO: Base route modification
  */
 
 class Router
 {
-    const ROUTE_SEPARATOR = '/';
+    const ROUTE_SEPARATOR        = '/';
     const NAMED_PARAMETER_PREFIX = ':';
     protected $routesFileArray;
+    protected $baseRoute;
 
 
     public function __construct($routesFile)
@@ -31,12 +31,13 @@ class Router
             throw new InvalidFileFormatException('Routes JSON file must have 404 error route!');
         } else {
             $this->routesFileArray = $routes;
+            $this->baseRoute       = trim($this->routesFileArray['baseUrl'], self::ROUTE_SEPARATOR);
         }
     }
 
     public function parseRoute($request)
     {
-        $requestParts = self::partOutRoute($request);
+        $requestParts = self::partOutRoute(str_replace($this->baseRoute, '', $request));
 
         foreach ($this->routesFileArray['routes'] as $name => $route) {
             $routeParts = self::partOutRoute($route['route']);
