@@ -21,17 +21,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnRoutesFileNotFound()
     {
-        $router = new Router('notARealFile.json');
+        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . 'notARealFile.json');
 
         $this->assertNotInstanceOf('\\Gears\\Router\\Router', $router);
     }
 
     /**
-     * @expectedException \Gears\Exceptions\FileNotReadableException
+     * @expectedException \Gears\Exceptions\InvalidFileFormatException
      */
     public static function testExceptionOnIncorrectJsonFormat()
     {
-        $router = new Router('testBadRoutes.json');
+        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . 'testBadRoutes.json');
 
         self::assertNotInstanceOf('\\Gears\\Router\\Router', $router);
     }
