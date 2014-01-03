@@ -10,7 +10,8 @@
         }
     ],
     "require":     {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "smarty/smarty": "v3.1.16"
     },
     "type":        "library",
     "autoload":    {

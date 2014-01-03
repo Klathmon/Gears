@@ -1,3 +1,5 @@
-phpunit.phar
-Workspace.php
 .idea
+phpunit.phar
+compser.phar
+vendor
+Workspace.php
