@@ -3,6 +3,7 @@ namespace Gears\Router;
 
 use Gears\Exceptions\FileNotReadableException;
 use Gears\Exceptions\InvalidFileFormatException;
+use Gears\Exceptions\KeyNotDefinedException;
 use InvalidArgumentException;
 
 /*
@@ -48,7 +49,7 @@ class Router
         if (!array_key_exists($name, $this->routesFileArray['routes'])) {
             throw new InvalidArgumentException('Route not found!');
         }elseif(!is_array($namedParameters)){
-            throw new InvalidArgumentException('$namedParameters must be an associative array!');
+            throw new KeyNotDefinedException('$namedParameters must be an associative array!');
         }
 
         $route = $this->routesFileArray['routes'][$name]['route'];
