@@ -1,0 +1,22 @@
+{
+    "baseUrl": "",
+    "routes":  {
+        "test1": {
+            "route":      "/testroute1",
+            "controller": "Test1",
+            "action":     "show",
+            parameters": ["param1value", "param2value"]
+        },
+        "test2": {
+            "route":      "/testroute2/:value1/:value2",
+            "controller": "Test2",
+            "action":     "show",
+            "parameters": [":value1", ":value2"]
+        }
+        "test3": {
+            "route":      "/testroute3/:controller/:action/:param1",
+            "controller": ":controller",
+            "action":     ":action",
+            "parameters": [":param1"]
+    }
+}
