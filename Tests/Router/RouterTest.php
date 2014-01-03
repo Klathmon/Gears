@@ -76,5 +76,53 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             ['testRoutes2.json', '/not/a/real/route', '404', 'ErrorController', 'fourOhFour', []],
         ];
     }
+
+    /**
+     * @dataProvider providerTestReverseRoute
+     */
+    public function testReverseRoute($routeFile, $routeName, $parameters, $expectedRoute)
+    {
+        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . $routeFile);
+
+        $this->assertInstanceOf('\\Gears\\Router\\Router', $router);
+
+        $reversedRoute = $router->reverseRoute($routeName, $parameters);
+
+        $this->assertEquals($expectedRoute, $reversedRoute);
+    }
+
+    public static function providerTestReverseRoute()
+    {
+        return [
+            ['testRoutes.json', 'test1', [], '/testbaseurl/testroute1'],
+            ['testRoutes.json', 'test2', ['value1' => 123, 'value2' => '456'], '/testbaseurl/testroute2/123/456'],
+            ['testRoutes.json', 'test3', [':controller' => 'MyController', ':action' => 'MyAction', ':param1' => 'MyParameter'], '/testbaseurl/testroute3/MyController/MyAction/MyParameter'],
+            ['testRoutes2.json', 'test1', [], '/testroute1'],
+            ['testRoutes2.json', 'test2', ['value1' => 123, 'value2' => '456'], '/testroute2/123/456'],
+            ['testRoutes2.json', 'test3', [':controller' => 'MyController', ':action' => 'MyAction', ':param1' => 'MyParameter'], '/testroute3/MyController/MyAction/MyParameter'],
+        ];
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @dataProvider providerTestBadReverseRoute
+     */
+    public function testBadReverseRoute($routeFile, $routeName, $parameters)
+    {
+        $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . $routeFile);
+
+        $this->assertInstanceOf('\\Gears\\Router\\Router', $router);
+
+        $router->reverseRoute($routeName, $parameters);
+    }
+
+    public static function providerTestBadReverseRoute()
+    {
+        return [
+            ['testRoutes.json', 'notarealtestroute', []],
+            ['testRoutes.json', 'test2', [123, '456']],
+            ['testRoutes.json', 'test3', [':controller' => 'MyController', ':action' => 'MyAction']],
+        ];
+    }
 }
  

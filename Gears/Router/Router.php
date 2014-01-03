@@ -7,7 +7,7 @@ use InvalidArgumentException;
 
 /*
  * TODO: Full DocBlock annotations
- * TODO: Reverse route matching
+ * TODO: Full loading of controller
  * TODO: Calling errors manually
  */
 
@@ -15,6 +15,7 @@ class Router
 {
     const ROUTE_SEPARATOR        = '/';
     const NAMED_PARAMETER_PREFIX = ':';
+
     protected $routesFileArray;
     protected $baseRoute;
 
@@ -31,13 +32,48 @@ class Router
             throw new InvalidFileFormatException('Routes JSON file must have 404 error route!');
         } else {
             $this->routesFileArray = $routes;
-            $this->baseRoute       = trim($this->routesFileArray['baseUrl'], self::ROUTE_SEPARATOR);
+            $this->baseRoute       = self::trimPart($this->routesFileArray['baseUrl']);
         }
+    }
+
+    /*public function routeToController($request, $controllerNamespace = '/Controllers/')
+    {
+        $controller = ($controllerNamespace != '' ? '/' . trim($controllerNamespace, '/') . '/' : '') . $request['controller'];
+        
+        return call_user_func_array([new $controller($this->serviceLocator), $request['action']], $request['parameters']);
+    }*/
+
+    public function reverseRoute($name, $namedParameters)
+    {
+        if (!array_key_exists($name, $this->routesFileArray['routes'])) {
+            throw new InvalidArgumentException('Route not found!');
+        }elseif(!is_array($namedParameters)){
+            throw new InvalidArgumentException('$namedParameters must be an associative array!');
+        }
+
+        $route = $this->routesFileArray['routes'][$name]['route'];
+
+        foreach ($namedParameters as $parameterName => $value) {
+            $parameterName = ':' . trim($parameterName, ':');
+            $route = str_replace($parameterName, $value, $route);
+        }
+        
+        if(strpos($route, self::NAMED_PARAMETER_PREFIX) !== false){
+            throw new InvalidArgumentException('Missing named parameters!');
+        }
+
+        $reverseRoute = $this->baseRoute . self::ROUTE_SEPARATOR . self::trimPart($route);
+        
+        return ($reverseRoute[0] === self::ROUTE_SEPARATOR ? $reverseRoute : self::ROUTE_SEPARATOR . $reverseRoute);
     }
 
     public function parseRoute($request)
     {
-        $requestParts = self::partOutRoute(str_replace($this->baseRoute, '', $request));
+        if (substr(self::trimPart($request), 0, strlen($this->baseRoute)) == $this->baseRoute) {
+            $request = str_replace($this->baseRoute, '', $request);
+        }
+
+        $requestParts = self::partOutRoute($request);
 
         foreach ($this->routesFileArray['routes'] as $name => $route) {
             $routeParts = self::partOutRoute($route['route']);
@@ -61,7 +97,7 @@ class Router
         foreach ($requestParts as $partNumber => $requestPart) {
             $routePart = $routeParts[$partNumber];
 
-            if ($routePart[0] == self::NAMED_PARAMETER_PREFIX) {
+            if (self::isNamedParameter($routePart)) {
                 $namedParameters[$routePart] = $requestPart;
             } elseif ($routePart != $requestPart) {
                 return false; //At the first non-matching thing, return false.
@@ -79,7 +115,7 @@ class Router
         $returnVal['action']     = $this->getValue($route['action'], $namedParameters);
         $returnVal['parameters'] = [];
         foreach ($route['parameters'] as $parameter) {
-            $key                           = ($parameter[0] == self::NAMED_PARAMETER_PREFIX ? substr($parameter, 1) : $parameter);
+            $key                           = (self::isNamedParameter($parameter) ? substr($parameter, 1) : $parameter);
             $returnVal['parameters'][$key] = $this->getValue($parameter, $namedParameters);
         }
 
@@ -88,15 +124,29 @@ class Router
 
     private function getValue($command, $namedParameters)
     {
-        if ($command[0] == self::NAMED_PARAMETER_PREFIX && array_key_exists($command, $namedParameters)) {
+        if (self::isNamedParameter($command) && array_key_exists($command, $namedParameters)) {
             return $namedParameters[$command];
         } else {
             return $command;
         }
     }
 
+    private static function trimPart($part)
+    {
+        return trim($part, self::ROUTE_SEPARATOR);
+    }
+
     private static function partOutRoute($route)
     {
-        return explode(self::ROUTE_SEPARATOR, trim($route, self::ROUTE_SEPARATOR));
+        return explode(self::ROUTE_SEPARATOR, self::trimPart($route));
+    }
+
+    private static function isNamedParameter($parameter)
+    {
+        if ($parameter[0] == self::NAMED_PARAMETER_PREFIX) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
