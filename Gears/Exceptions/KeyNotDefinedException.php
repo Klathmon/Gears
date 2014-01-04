@@ -1,6 +1,7 @@
 <?php
 namespace Gears\Exceptions;
 
-class KeyNotDefinedException extends \Exception{
+class KeyNotDefinedException extends \Exception
+{
 
 } 

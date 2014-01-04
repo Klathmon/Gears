@@ -69,7 +69,7 @@ class Execute
 
     /**
      * Get the output from the last execute() function call.
-     * 
+     *
      * @return mixed The stdout of the program.
      */
     public function getOutput()
@@ -79,7 +79,7 @@ class Execute
 
     /**
      * Get the error-output of the last execute() function call.
-     * 
+     *
      * @return mixed The stderr of the program.
      */
     public function getErrorOutput()
