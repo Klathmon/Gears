@@ -17,10 +17,14 @@ class ExecuteTest extends PHPUnit_Framework_TestCase
      */
     public function testRunGrepOnString($command, $stdin, $expectedStdout, $expectedStderr)
     {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $this->markTestSkipped('Windows Tests will be added later');
+        }
+        
         $object = new Execute($command);
         $this->assertInstanceOf('\\Gears\\Execute\\Execute', $object);
         $object->execute($stdin);
-        
+
         $this->assertEquals($expectedStdout, $object->getOutput());
         $this->assertEquals($expectedStderr, $object->getErrorOutput());
     }
