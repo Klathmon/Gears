@@ -31,6 +31,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $config = $this->makeConstructor($fileName, $fileType);
 
         foreach ($expectedArray as $name => $value) {
+            $this->assertTrue(isset($config[$name]));
             $this->assertEquals($value, $config[$name]);
         }
     }
@@ -68,7 +69,29 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->makeConstructor($fileName, $fileType);
 
-        $this->assertEquals($expectedArray, iterator_to_array($config));
+        $this->assertEquals(count($expectedArray), count($config));
+    }
+    
+    /**
+     * @dataProvider providerTestConfigFiles
+     * @expectedException \Gears\Exceptions\ImmutableException
+     */
+    public function testConfigFileExceptionOnSet($fileName, $fileType, $expectedArray)
+    {
+        $config = $this->makeConstructor($fileName, $fileType);
+
+        $config[key($expectedArray)] = 'testingSetting';
+    }
+    
+    /**
+     * @dataProvider providerTestConfigFiles
+     * @expectedException \Gears\Exceptions\ImmutableException
+     */
+    public function testConfigFileExceptionOnUnset($fileName, $fileType, $expectedArray)
+    {
+        $config = $this->makeConstructor($fileName, $fileType);
+
+        unset($config[key($expectedArray)]);
     }
 
     public function providerTestConfigFiles()
