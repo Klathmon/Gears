@@ -2,6 +2,7 @@
 namespace Gears;
 
 use DateTime;
+use InvalidArgumentException;
 
 class DependencyInjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -82,6 +83,42 @@ class DependencyInjectorTest extends \PHPUnit_Framework_TestCase
         
         //They both don't refer to the same object
         $this->assertTrue(($dateTime !== $dateTime2));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAddingDependencyNonScalarKey()
+    {
+        $this->di->addDependency(function(){echo 'TEST!';}, 'key');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGettingDependencyNonScalarKey()
+    {
+        $this->testAddingDependency();
+        
+        $this->di->getDependency(function(){echo 'TEST!';});
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAddingDependencyNonClosure()
+    {
+        $this->di->addDependency('key', '\\DateTime::createFromFormat');
+    }
+
+    /**
+     * @expectedException \Gears\Exceptions\KeyNotDefinedException
+     */
+    public function testGettingDependencyKeyNotDefined()
+    {
+        $this->testAddingDependency();
+        
+        $this->di->getDependency('notarealkey!');
     }
 }
  

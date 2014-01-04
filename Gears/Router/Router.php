@@ -49,7 +49,7 @@ class Router
         if (!array_key_exists($name, $this->routesFileArray['routes'])) {
             throw new InvalidArgumentException('Route not found!');
         }elseif(!is_array($namedParameters)){
-            throw new KeyNotDefinedException('$namedParameters must be an associative array!');
+            throw new InvalidArgumentException('$namedParameters must be an associative array!');
         }
 
         $route = $this->routesFileArray['routes'][$name]['route'];
@@ -60,7 +60,7 @@ class Router
         }
         
         if(strpos($route, self::NAMED_PARAMETER_PREFIX) !== false){
-            throw new InvalidArgumentException('Missing named parameters!');
+            throw new KeyNotDefinedException('Missing named parameters!');
         }
 
         $reverseRoute = $this->baseRoute . self::ROUTE_SEPARATOR . self::trimPart($route);

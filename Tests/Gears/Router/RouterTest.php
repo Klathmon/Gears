@@ -104,11 +104,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
      * @dataProvider providerTestBadReverseRoute
      */
-    public function testBadReverseRoute($routeFile, $routeName, $parameters)
+    public function testBadReverseRoute($expectedException, $routeFile, $routeName, $parameters)
     {
+        $this->setExpectedException($expectedException);
+        
         $router = new Router(__DIR__ . DIRECTORY_SEPARATOR . $routeFile);
 
         $this->assertInstanceOf('\\Gears\\Router\\Router', $router);
@@ -119,9 +120,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public static function providerTestBadReverseRoute()
     {
         return [
-            ['testRoutes.json', 'notarealtestroute', []],
-            ['testRoutes.json', 'test2', [123, '456']],
-            ['testRoutes.json', 'test3', [':controller' => 'MyController', ':action' => 'MyAction']],
+            ['InvalidArgumentException', 'testRoutes.json', 'notarealtestroute', []],
+            ['\\Gears\\Exceptions\\KeyNotDefinedException', 'testRoutes.json', 'test2', [123, '456']],
+            ['\\Gears\\Exceptions\\KeyNotDefinedException', 'testRoutes.json', 'test3', [':controller' => 'MyController', ':action' => 'MyAction']],
+            ['InvalidArgumentException', 'testRoutes.json', 'test3', 'cats'],
         ];
     }
 }
