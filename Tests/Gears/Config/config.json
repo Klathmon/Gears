@@ -1,0 +1,9 @@
+{
+    "assoc1": "thing1",
+    "assoc2": ["thing1", "thing2", "thing3"],
+    "assoc3": {
+        "one": "thing1",
+        "two": "thing2",
+        "three": "thing3"
+    }
+}

@@ -1,0 +1,15 @@
+<root>
+    
+    <assoc1>thing1</assoc1>
+    
+    <assoc2>thing1</assoc2>
+    <assoc2>thing2</assoc2>
+    <assoc2>thing3</assoc2>
+    
+    <assoc3>
+        <one>thing1</one>
+        <two>thing2</two>
+        <three>thing3</three>
+    </assoc3>
+    
+</root>

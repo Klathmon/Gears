@@ -2,11 +2,13 @@
 namespace Gears\Config;
 
 use ArrayAccess;
+use Countable;
 use Gears\Exceptions\FileNotReadableException;
 use Gears\Exceptions\ImmutableException;
 use Gears\Exceptions\UnknownTypeException;
+use Iterator;
 
-class Parser implements ArrayAccess
+class Parser implements ArrayAccess, Iterator, Countable
 {
     private $configData;
 
@@ -52,5 +54,35 @@ class Parser implements ArrayAccess
     public function offsetUnset($offset)
     {
         throw new ImmutableException('Cannot modify config options, they are read only!');
+    }
+
+    public function current()
+    {
+        return current($this->configData);
+    }
+
+    public function next()
+    {
+        return next($this->configData);
+    }
+
+    public function key()
+    {
+        return key($this->configData);
+    }
+
+    public function valid()
+    {
+        return $this->current() !== false;
+    }
+
+    public function rewind()
+    {
+        return reset($this->configData);
+    }
+
+    public function count()
+    {
+        return count($this->configData);
     }
 } 
