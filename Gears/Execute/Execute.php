@@ -89,12 +89,12 @@ class Execute
     
     private function trimOutput($output)
     {
-        $noNewLine = rtrim($output, PHP_EOL);
+        $output = rtrim($output, PHP_EOL);
         
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return rtrim($noNewLine, ' ');
-        }else{
-            return $noNewLine;
+            $output = rtrim($output, ' ');
         }
+        
+        return $output;
     }
 }
