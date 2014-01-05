@@ -74,7 +74,7 @@ class Execute
      */
     public function getOutput()
     {
-        return rtrim($this->stdout, "\n");
+        return $this->trimOutput($this->stdout);
     }
 
     /**
@@ -84,6 +84,17 @@ class Execute
      */
     public function getErrorOutput()
     {
-        return rtrim($this->stderr, "\n");
+        return $this->trimOutput($this->stderr);
+    }
+    
+    private function trimOutput($output)
+    {
+        $noNewLine = rtrim($output, PHP_EOL);
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return rtrim($noNewLine, ' ');
+        }else{
+            return $noNewLine;
+        }
     }
 }
