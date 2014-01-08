@@ -118,7 +118,7 @@ class DependencyInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->testAddingDependency();
         
-        $this->di->getDependency('notarealkey!');
+        $this->di->getDependency('notarealkey! @');
     }
 }
  
