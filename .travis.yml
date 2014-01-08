@@ -5,6 +5,3 @@ php:
 
 install:
   - composer install
-
-before_script:
-  - echo "zend_extension = xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
