@@ -65,11 +65,6 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $modifiedDateTime = $cache->getLastModifiedTime($key);
 
         $this->assertNotEquals(0, $modifiedDateTime->format('U'));
-
-        $this->assertEquals(
-            DateTime::createFromFormat('U', time())->format('Y-m-d H:i'),
-            $modifiedDateTime->format('Y-m-d H:i')
-        );
         
         $this->assertEquals(filemtime(self::getCachePath() . $expectedFilename), $modifiedDateTime->format('U'));
     }
