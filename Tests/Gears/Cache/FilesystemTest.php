@@ -189,25 +189,6 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(DateTime::createFromFormat('U', 0), $cache->getLastModifiedTime('NOTAREALKEY!!@#%^'));
     }
 
-    public function testModifiedTimeIsNotUpdatedByFetch()
-    {
-        $cache = $this->getConstructor();
-
-        $key = 'testModifiedTimeIsNotUpdatedByFetch';
-
-        $cache->store($key, '8675309');
-
-        sleep(1);
-
-        $cache->fetch($key);
-
-        $this->assertEquals(
-            DateTime::createFromFormat('U', time())->format('U') - 1,
-            $cache->getLastModifiedTime($key)->format('U')
-        );
-    }
-
-
     protected static function getCachePath()
     {
         return rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'CacheTest' . DIRECTORY_SEPARATOR;
