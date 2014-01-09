@@ -48,8 +48,30 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 
         $cache->store($key, $value);
 
-        $this->assertFileExists(
-            self::getCachePath() . $expectedFilename);
+        $this->assertFileExists(self::getCachePath() . $expectedFilename);
+    }
+
+    /**
+     * @depends      testStore
+     * @dataProvider providerCacheData
+     */
+    public function testGetModifiedTime($key, $value, $expectedFilename)
+    {
+        if ($value == $value) {
+        } //Get rid of the IDE warning...
+        
+        $cache = $this->getConstructor();
+
+        $modifiedDateTime = $cache->getLastModifiedTime($key);
+
+        $this->assertNotEquals(0, $modifiedDateTime->format('U'));
+
+        $this->assertEquals(
+            DateTime::createFromFormat('U', time())->format('Y-m-d H:i'),
+            $modifiedDateTime->format('Y-m-d H:i')
+        );
+        
+        $this->assertEquals(filemtime(self::getCachePath() . $expectedFilename), $modifiedDateTime->format('U'));
     }
 
     /**
@@ -157,6 +179,32 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($cache->fetch(['folder2', 'folder3', 'superKey2!']));
         $this->assertNull($cache->fetch(['folder2', 'folder4', 'superKey2!']));
         $this->assertNull($cache->fetch(['folder2', 'superKey!']));
+    }
+
+    public function testGetNonExistantKey()
+    {
+        $cache = $this->getConstructor();
+
+        $this->assertNull($cache->fetch('NOTAREALKEY!!@#%^'));
+        $this->assertEquals(DateTime::createFromFormat('U', 0), $cache->getLastModifiedTime('NOTAREALKEY!!@#%^'));
+    }
+
+    public function testModifiedTimeIsNotUpdatedByFetch()
+    {
+        $cache = $this->getConstructor();
+
+        $key = 'testModifiedTimeIsNotUpdatedByFetch';
+
+        $cache->store($key, '8675309');
+
+        sleep(1);
+
+        $cache->fetch($key);
+
+        $this->assertEquals(
+            DateTime::createFromFormat('U', time())->format('U') - 1,
+            $cache->getLastModifiedTime($key)->format('U')
+        );
     }
 
 

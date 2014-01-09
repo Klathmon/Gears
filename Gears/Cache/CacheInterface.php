@@ -7,4 +7,5 @@ interface CacheInterface
     public function fetch($key);
     public function store($key, $value);
     public function delete($key);
+    public function getLastModifiedTime($key);
 } 

@@ -1,6 +1,7 @@
 <?php
 namespace Gears\Cache;
 
+use DateTime;
 use DirectoryIterator;
 use Gears\Exceptions\FileNotWritableException;
 use InvalidArgumentException;
@@ -69,6 +70,17 @@ class Filesystem implements CacheInterface
             $clearDirectory($fileName);
         }else{
             unlink($fileName . self::EXTENSION);
+        }
+    }
+    
+    public function getLastModifiedTime($key)
+    {
+        $fileName = $this->convertKeyToFileName($key) . self::EXTENSION;
+        
+        if(!is_readable($fileName)){
+            return DateTime::createFromFormat('U', 0);
+        }else{
+            return DateTime::createFromFormat('U', filemtime($fileName));
         }
     }
     
