@@ -72,7 +72,7 @@ class Filesystem implements CacheInterface
         }
     }
     
-    protected function convertKeyToFileName($key)
+    public function convertKeyToFileName($key)
     {
         $fileName = rtrim($this->rootPath, DIRECTORY_SEPARATOR);
         

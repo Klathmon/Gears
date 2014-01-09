@@ -48,7 +48,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 
         $cache->store($key, $value);
 
-        $this->assertFileExists(self::getCachePath() . $expectedFilename);
+        $this->assertFileExists(self::getCachePath() . $expectedFilename, 'Failed asserting that file "' . $cache->convertKeyToFileName($key) . '" exists!');
     }
 
     /**
