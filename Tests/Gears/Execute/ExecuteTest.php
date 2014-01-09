@@ -15,7 +15,7 @@ class ExecuteTest extends PHPUnit_Framework_TestCase
         
         $this->assertInstanceOf('\\Gears\\Execute\\Execute', $object);
         
-        $object->execute($stdin);
+        $object->run($stdin);
 
         $this->assertEquals($expectedStdout, $object->getOutput());
         $this->assertEquals($expectedStderr, $object->getErrorOutput());

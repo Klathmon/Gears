@@ -10,6 +10,8 @@ class Filesystem implements CacheInterface
 {
     const EXTENSION = '.cache';
     
+    protected $rootPath;
+    
     public function __construct($prefix)
     {
         if(($path = realpath($prefix)) === false){

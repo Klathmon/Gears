@@ -111,6 +111,7 @@ class Router
 
     private function getRouteInfo($route, $namedParameters = [])
     {
+        $returnVal = [];
         //Route matches the request, get the values.
         $returnVal['controller'] = $this->getValue($route['controller'], $namedParameters);
         $returnVal['action']     = $this->getValue($route['action'], $namedParameters);

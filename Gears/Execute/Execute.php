@@ -14,7 +14,7 @@ class Execute
 {
     /** @var array[] The proc_open descriptor specs */
     private $descriptors;
-    /** @var string The command to execute */
+    /** @var string The command to run */
     private $command;
     /** @var string The output from the command */
     private $stdout;
@@ -22,7 +22,7 @@ class Execute
     private $stderr;
 
     /**
-     * Pass the command you would like to run into the constructor. It will not be run until you call the execute() function.
+     * Pass the command you would like to run into the constructor. It will not be run until you call the run() function.
      * This can be run more than once over the lifetime of the object, however it will overwrite the data from a previous call without any warning.
      *
      * @param string $command Must include full path to command. This should NEVER include user-supplied information. *TREAT THIS LIKE YOU WOULD A SHELL*
@@ -45,7 +45,7 @@ class Execute
      *
      * @return $this
      */
-    public function execute($data = null)
+    public function run($data = null)
     {
         $pipes = [];
 
@@ -68,7 +68,7 @@ class Execute
     }
 
     /**
-     * Get the output from the last execute() function call.
+     * Get the output from the last run() function call.
      *
      * @return mixed The stdout of the program.
      */
@@ -78,7 +78,7 @@ class Execute
     }
 
     /**
-     * Get the error-output of the last execute() function call.
+     * Get the error-output of the last run() function call.
      *
      * @return mixed The stderr of the program.
      */
@@ -91,9 +91,9 @@ class Execute
     {
         $output = rtrim($output, PHP_EOL);
         
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $output = rtrim($output, ' ');
-        }
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {//@codeCoverageIgnore
+            $output = rtrim($output, ' ');//@codeCoverageIgnore
+        }//@codeCoverageIgnore
         
         return $output;
     }
