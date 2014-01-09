@@ -1,19 +1,19 @@
 {
-    "name":        "klathmon/gears",
+    "name": "klathmon/gears",
     "description": "The Gears Framework",
-    "licence":     "MIT",
-    "authors":     [
+    "license": "MIT",
+    "authors": [
         {
-            "name":  "Gregory Benner",
+            "name": "Gregory Benner",
             "email": "Gregbenner1@gmail.com",
-            "role":  "Developer"
+            "role": "Developer"
         }
     ],
-    "require":     {
+    "require": {
         "php": ">=5.4.0"
     },
-    "type":        "library",
-    "autoload":    {
+    "type": "library",
+    "autoload": {
         "psr-0": {
             "": ""
         }
