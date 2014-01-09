@@ -72,7 +72,7 @@ class Filesystem implements CacheInterface
         }
     }
     
-    public function convertKeyToFileName($key)
+    protected function convertKeyToFileName($key)
     {
         $fileName = rtrim($this->rootPath, DIRECTORY_SEPARATOR);
         
@@ -80,7 +80,7 @@ class Filesystem implements CacheInterface
         
         foreach($key as $keyItem){
             $fileName .= DIRECTORY_SEPARATOR;
-            $fileName .= abs(crc32($keyItem)) . '-';
+            $fileName .= md5($keyItem) . '-';
             $fileName .= preg_replace('/[^a-zA-Z0-9.]+/', '_', substr($keyItem, 0, 25));
         }
         
