@@ -2,6 +2,7 @@
 namespace Gears\Compress;
 
 use Gears\Exceptions\BinaryErrorException;
+use Gears\Exceptions\FileNotReadableException;
 use Gears\Execute\Execute;
 
 class Zopfli
@@ -29,24 +30,50 @@ class Zopfli
 
     public function compress($data)
     {
-        $tmpHandle = tmpfile();
-        fwrite($tmpHandle, $data);
+        $inputFileName = tempnam(rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR), 'Zopfli');
+
+        file_put_contents($inputFileName, $data);
 
         $command = '.' . DIRECTORY_SEPARATOR . $this->binary . ' ';
-        $command .= '-c ';
         $command .= $this->compressionType . ' ';
-        $command .= '-i' . $this->compressionLevel . ' ';
-        $command .= '"' . stream_get_meta_data($tmpHandle)['uri'] . '"';
+        $command .= '--i' . $this->compressionLevel . ' ';
+        $command .= '"' . $inputFileName . '"';
 
         $execute = new Execute($command, $this->binaryDirectory);
 
         $execute->run();
 
         if ($execute->getErrorOutput() != '') {
-            throw new BinaryErrorException('Error running ' . $this->binary . ': ' . $execute->getErrorOutput() . ' ' . $command);
+            throw new BinaryErrorException('Error running ' . $this->binary . ': ' . $execute->getErrorOutput());
         }
 
-        return $execute->getOutput();
+        $outputFileName = $inputFileName;
+
+        switch ($this->compressionType) {
+            case self::RFC1950:
+                $outputFileName .= '.zlib';
+                break;
+            case self::RFC1951:
+                $outputFileName .= '.deflate';
+                break;
+            case self::RFC1952:
+                $outputFileName .= '.gz';
+                break;
+        }
+
+        $output = file_get_contents($outputFileName);
+        
+        foreach([$inputFileName, $outputFileName] as $fileName){
+            if(is_writable($fileName)){
+                unlink($fileName);
+            }
+        }
+
+        if (($output) === false) {
+            throw new FileNotReadableException('File ' . $outputFileName . ' cannot be found!');
+        }
+
+        return $output;
     }
 
 
