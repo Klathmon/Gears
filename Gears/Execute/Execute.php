@@ -16,6 +16,8 @@ class Execute
     private $descriptors;
     /** @var string The command to run */
     private $command;
+    /** @var string The path to the command to run */
+    private $path;
     /** @var string The output from the command */
     private $stdout;
     /** @var string The error-output from the command */
@@ -26,8 +28,9 @@ class Execute
      * This can be run more than once over the lifetime of the object, however it will overwrite the data from a previous call without any warning.
      *
      * @param string $command Must include full path to command. This should NEVER include user-supplied information. *TREAT THIS LIKE YOU WOULD A SHELL*
+     * @param null   $path The path to the command you want to run. This should NEVER include user-supplied information. *TREAT THIS LIKE YOU WOULD A SHELL*
      */
-    public function __construct($command)
+    public function __construct($command, $path = null)
     {
         $this->descriptors = [
             0 => ['pipe', 'r'],
@@ -36,6 +39,7 @@ class Execute
         ];
 
         $this->command = $command;
+        $this->path = $path;
     }
 
     /**
@@ -49,7 +53,7 @@ class Execute
     {
         $pipes = [];
 
-        $handle = proc_open($this->command, $this->descriptors, $pipes);
+        $handle = proc_open($this->command, $this->descriptors, $pipes, $this->path);
 
         if (!is_null($data)) {
             fwrite($pipes[0], $data);
@@ -92,7 +96,7 @@ class Execute
         $output = rtrim($output, PHP_EOL);
         
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {//@codeCoverageIgnore
-            $output = rtrim($output, ' ');//@codeCoverageIgnore
+            $output = rtrim($output);//@codeCoverageIgnore
         }//@codeCoverageIgnore
         
         return $output;
