@@ -34,7 +34,8 @@ class Zopfli
 
         file_put_contents($inputFileName, $data);
 
-        $command = '.' . DIRECTORY_SEPARATOR . $this->binary . ' ';
+        $command = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '.' : $this->binaryDirectory);
+        $command .= DIRECTORY_SEPARATOR . $this->binary . ' ';
         $command .= $this->compressionType . ' ';
         $command .= '--i' . $this->compressionLevel . ' ';
         $command .= '"' . $inputFileName . '"';
