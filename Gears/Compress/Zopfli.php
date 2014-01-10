@@ -24,6 +24,7 @@ class Zopfli
         $this->compressionType  = $compressionType;
         $this->binaryDirectory  = __DIR__ . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR;
         $this->binary           = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'zopfli.exe' : 'zopfli');
+        chmod($this->binaryDirectory . $this->binary, 0555);
     }
 
     public function compress($data)
