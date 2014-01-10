@@ -62,15 +62,15 @@ class Zopfli
         }
 
         $output = file_get_contents($outputFileName);
-        
-        foreach([$inputFileName, $outputFileName] as $fileName){
-            if(is_writable($fileName)){
+
+        foreach ([$inputFileName, $outputFileName] as $fileName) {
+            if (is_writable($fileName)) {
                 unlink($fileName);
             }
         }
 
         if (($output) === false) {
-            throw new FileNotReadableException('File ' . $outputFileName . ' cannot be found!');
+            throw new FileNotReadableException('File ' . $outputFileName . ' cannot be found!'); //@codeCoverageIgnore
         }
 
         return $output;

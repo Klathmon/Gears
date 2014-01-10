@@ -4,10 +4,17 @@ namespace Gears\Compress;
 class ZopfliTest extends \PHPUnit_Framework_TestCase
 {
     const DS = DIRECTORY_SEPARATOR;
-    
-    public function test1is1()
+
+    /**
+     * @expectedException \Gears\Exceptions\BinaryErrorException
+     */
+    public function testBadExecution()
     {
-        $this->assertEquals(1, 1);
+        $zopfli = new Zopfli(ZOPFLI::RFC1951, 0);
+
+        $this->assertInstanceOf('\\Gears\\Compress\\Zopfli', $zopfli);
+        
+        $zopfli->compress('This is a test and it should fail!');
     }
 
     /**
